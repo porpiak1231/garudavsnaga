@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Hello World</title>
+</head>
+<style>
+  html, body {
+    margin:0px;
+    height:100%;
+    width:100%;
+  }
+  
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.1/pixi.min.js"></script>
+<body>
+ 
+</body>
+<script src="js/classes/Element.js"></script>
+<script src="js/classes/Title.js"></script>
+<script src="js/methods/initialElement.js"></script>
+<script src="js/methods/initialTitle.js"></script>
+<script type="text/javascript">
+  
+
+  var app = new PIXI.Application(window.innerWidth, window.innerHeight);
+  app.renderer.view.style.position = "absolute";
+  app.renderer.view.style.display = "block";
+  app.renderer.autoResize = true;
+  app.renderer.backgroundColor = 0xffffff
+  app.renderer.resize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(app.renderer.view);
+  app.stop()
+  PIXI.loader
+    .add('bg', 'images/assets/bg.png')
+    .add('bg1', 'images/assets/01-1.png')
+    .add('bg2', 'images/assets/01-2.png')
+    .add('bg3', 'images/assets/01-3.png')
+    .add('text-garuda', 'images/assets/garuda.png')
+    .add('text-vs', 'images/assets/vs.png')
+    .add('text-naga', 'images/assets/naga.png')
+    .load(onAssetsLoaded);
+  let scrollingValue = 0;
+
+function onAssetsLoaded(loader, resources)
+{
+  const getMousePosition = () => app.renderer.plugins.interaction.mouse.global
+  console.log(resources)
+  const AllElement = initialElement()
+  const AllTitle = initialTitle()
+  
+  for(let i = 0; i < AllElement.length; i += 1) {
+    app.stage.addChild(AllElement[i].Sprite);
+  }
+  for(let i = 0; i < AllTitle.length; i += 1) {
+    app.stage.addChild(AllTitle[i].Sprite);
+  }
+
+  document.getElementsByTagName("BODY")[0].addEventListener("wheel", (e) => {
+    for(let i = 0; i < AllTitle.length; i += 1) {
+        AllTitle[i].Sprite.y += e.deltaY
+    }
+    for(let i = 0; i < AllElement.length; i += 1) {
+      AllElement[i].Sprite.y += e.deltaY
+    }
+  });
+
+  app.ticker.add(function(delta) {
+    const {x, y} = getMousePosition()
+    for(let i = 0; i < AllElement.length; i += 1) {
+      AllElement[i].run()
+    }
+    for(let i = 0; i < AllTitle.length; i += 1) {
+      AllTitle[i].rotate({x, y})
+    }
+    app.renderer.resize(window.innerWidth, window.innerHeight);
+  });
+  app.start()
+  
+  
+}
+
+
+
+</script>
+</html>
