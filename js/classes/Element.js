@@ -1,8 +1,10 @@
 
 
 class Element{
-  constructor({name, acX = 0.5 , acY = 0.5 , startX = 0  ,posY = -1000 ,posX = 0 , speed = 0 , scale = 1, frame = 1 }){
+  constructor({name, acX = 0.5 , acY = 0.5 , startX = 0  ,posY = -10000 ,posX = 0 , speed = 0 , scale = 1, frame = 1, prl = false }){
     this.acX = acX
+    this.prl = prl
+    this.name = name
     this.startX = startX
     this.scale = scale
     const sprite = PIXI.Sprite.fromImage(name)
@@ -26,15 +28,5 @@ class Element{
     this.Sprite.scale.set(scale, scale);
     this.Sprite.animationSpeed = 0.2;
     this.Sprite.gotoAndPlay(0)
-  }
-
-  run() {
-    if(this.speed == 0) {
-      this.Sprite.x += 0
-    }
-    this.Sprite.x += this.speed
-    if (this.Sprite.x >= (this.Sprite.width * this.acX) + window.innerWidth) {
-      this.Sprite.x =  - (this.Sprite.width * Math.abs(1 - this.acX) + window.innerWidth)
-    }
   }
 }

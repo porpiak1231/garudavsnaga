@@ -181,9 +181,10 @@ function onAssetsLoaded(loader, resources)
       // else app.renderer.backgroundColor = (r << 16) + (g << 8) + (b)
     app.renderer.backgroundColor = (r << 16) + (g << 8) + (b)
     // app.renderer.backgroundColor = (r << 16) + (g << 8) + (b)
-    console.log(app.renderer.backgroundColor)
     
   }
+  let stopTracker = 0
+  let checkStopTracker = false
   app.ticker.add(function(delta) {
     app.renderer.resize(window.innerWidth, window.innerHeight);
     if(intro || intro2 || interact_1) {
@@ -192,7 +193,7 @@ function onAssetsLoaded(loader, resources)
         for( let i = 0; i < 2; i += 1) {
           IntroParallax[i].Sprite.scale.set(IntroParallax[i].scale * window.innerHeight/1440, IntroParallax[i].scale * window.innerHeight/1440)
           // IntroParallax[i].Sprite.x = window.innerWidth/2 + (IntroParallax[i].startX * window.innerHeight/1440)
-          IntroParallax[i].Sprite.y = window.innerHeight/48 * 24 + (tracker*window.innerHeight/1440 ) + (IntroParallax[i].startY * window.innerHeight/1440)
+          IntroParallax[i].Sprite.y = (tracker*window.innerHeight/1440 ) + (IntroParallax[i].startY * window.innerHeight/1440)
           IntroParallax[i].Sprite.alpha += 0.02
           if(IntroParallax[i].Sprite.alpha > 1) {
             checkIntro2 = false
@@ -218,7 +219,7 @@ function onAssetsLoaded(loader, resources)
         for( let i = 0; i < 4; i += 1) {
           IntroParallax[i].Sprite.scale.set(IntroParallax[i].scale * window.innerHeight/1440, IntroParallax[i].scale * window.innerHeight/1440)
           IntroParallax[i].Sprite.x = window.innerWidth/2 + (IntroParallax[i].startX * window.innerHeight/1440)
-          IntroParallax[i].Sprite.y = window.innerHeight/48 * 24 + (tracker*window.innerHeight/1440 ) + (IntroParallax[i].startY * window.innerHeight/1440)
+          IntroParallax[i].Sprite.y = (tracker*window.innerHeight/1440 ) + (IntroParallax[i].startY * window.innerHeight/1440)
         }
         IntroParallax[2].Sprite.alpha += 0.09
         if(IntroParallax[2].Sprite.alpha > 1) {
@@ -234,21 +235,21 @@ function onAssetsLoaded(loader, resources)
             for( let i = 0; i < Scene2Parallax.length; i+= 1) {
               scene2.addChild(Scene2Parallax[i].Sprite)
             }
-            for( let i = 0; i < Scene3Parallax.length; i+= 1) {
-              scene3.addChild(Scene3Parallax[i].Sprite)
-            }
-            for( let i = 0; i < Scene4Parallax.length; i+= 1) {
-              scene4.addChild(Scene4Parallax[i].Sprite)
-            }
-            for( let i = 0; i < Scene5Parallax.length; i+= 1) {
-              scene5.addChild(Scene5Parallax[i].Sprite)
-            }
-            for( let i = 0; i < BackgroundParallax.length; i+= 1) {
-              background.addChild(BackgroundParallax[i].Sprite)
-            }
-            for( let i = 0; i < TextParallax.length; i+= 1) {
-              text.addChild(TextParallax[i].Sprite)
-            }
+            // for( let i = 0; i < Scene3Parallax.length; i+= 1) {
+            //   scene3.addChild(Scene3Parallax[i].Sprite)
+            // }
+            // for( let i = 0; i < Scene4Parallax.length; i+= 1) {
+            //   scene4.addChild(Scene4Parallax[i].Sprite)
+            // }
+            // for( let i = 0; i < Scene5Parallax.length; i+= 1) {
+            //   scene5.addChild(Scene5Parallax[i].Sprite)
+            // }
+            // for( let i = 0; i < BackgroundParallax.length; i+= 1) {
+            //   background.addChild(BackgroundParallax[i].Sprite)
+            // }
+            // for( let i = 0; i < TextParallax.length; i+= 1) {
+            //   text.addChild(TextParallax[i].Sprite)
+            // }
           }
         }
       }
@@ -261,24 +262,48 @@ function onAssetsLoaded(loader, resources)
       }
       const angle = Math.atan2(wheelValue, 240)
       const yVelo = Math.sin(angle) * 50
-      if(wheelValue > 0) {
-        wheelValue -= 15 * window.innerHeight/1440
-        if(wheelValue < 0) wheelValue = 0
-        tracker += yVelo
-      } else if(wheelValue < 0) {
-        wheelValue += 15 * window.innerHeight/1440
-        if(wheelValue > 0) wheelValue = 0
-        tracker += yVelo
+      
+      if(!checkStopTracker) {
+        if(wheelValue > 0) {
+          wheelValue -= 15 * window.innerHeight/1440
+          if(wheelValue < 0) wheelValue = 0
+          tracker += yVelo
+        } else if(wheelValue < 0) {
+          wheelValue += 15 * window.innerHeight/1440
+          if(wheelValue > 0) wheelValue = 0
+          tracker += yVelo
+        } else {
+          wheelValue = 0
+        }
       } else {
-        wheelValue = 0
+        if(wheelValue > 0) {
+          wheelValue -= 15 * window.innerHeight/1440
+          if(wheelValue < 0) wheelValue = 0
+          stopTracker += yVelo
+        } else if(wheelValue < 0) {
+          wheelValue += 15 * window.innerHeight/1440
+          if(wheelValue > 0) wheelValue = 0
+          stopTracker += yVelo
+        } else {
+          wheelValue = 0
+        }
       }
+      console.log(tracker, stopTracker)
       /////// TRACKER ///////
-      if ( (tracker*window.innerHeight/1440 ) <= (-2000*window.innerHeight/1440 )){
+      if ( (tracker*window.innerHeight/1440 ) <= (-2*1440*window.innerHeight/1440 )){
         changeBg(255,255,255,10)
       } else {
         changeBg(0,0,0,10)
       }
-      // console.log((tracker*window.innerHeight/1440 ) , (2000*window.innerHeight/1440 ))
+
+      // if((tracker*window.innerHeight/1440 ) <= (-4.5*1440*window.innerHeight/1440 )) {
+      //   checkStopTracker = true
+      //   if(stopTracker > 0) {
+      //     stopTracker = 0
+      //     checkStopTracker = false
+      //   }
+      // }
+      // // console.log((tracker*window.innerHeight/1440 ) , (2000*window.innerHeight/1440 ))
       // console.log(wheelValue)
 
 
@@ -286,46 +311,63 @@ function onAssetsLoaded(loader, resources)
         IntroParallax[i].Sprite.scale.set(IntroParallax[i].scale * window.innerHeight/1440, IntroParallax[i].scale * window.innerHeight/1440)
         IntroParallax[i].Sprite.x = window.innerWidth/2 + (IntroParallax[i].startX * window.innerHeight/1440)
       }
-      IntroParallax[0].Sprite.y = window.innerHeight/48 * 24 - (tracker*window.innerHeight/1440 )/5 + (IntroParallax[0].startY *window.innerHeight/1440)      
-      IntroParallax[1].Sprite.y = window.innerHeight/48 * 24 + (tracker*window.innerHeight/1440 )/10 + (IntroParallax[1].startY *window.innerHeight/1440)
-      introScene.y = (tracker*window.innerHeight/1440 )
+      IntroParallax[0].Sprite.y = - (tracker*window.innerHeight/1440 )/5 + (IntroParallax[0].startY *window.innerHeight/1440)      
+      IntroParallax[1].Sprite.y = (tracker*window.innerHeight/1440 )/10 + (IntroParallax[1].startY *window.innerHeight/1440)
       // let nowX = window.innerWidth/2 + (IntroParallax[2].startX * window.innerHeight/1440)
       // let nowY = window.innerHeight/48 * 24 + (tracker*window.innerHeight/1440 ) + (IntroParallax[2].startY *window.innerHeight/1440)
+      introScene.y = (tracker*window.innerHeight/1440 )
       IntroParallax[2].parallaxMouse(2, 20, 10, 60, tracker, 300)
       IntroParallax[3].parallaxMouse(1, 10, 20, 30, tracker, 300)
-
       ////// herer ///////////////////////
       for( let i = 0; i < Scene1Parallax.length; i+= 1) {
         Scene1Parallax[i].Sprite.scale.set(Scene1Parallax[i].scale * window.innerHeight/1440, Scene1Parallax[i].scale * window.innerHeight/1440)
-        Scene1Parallax[i].Sprite.x = window.innerWidth/2 + (Scene1Parallax[i].startX * window.innerHeight/1440)
+        if(Scene1Parallax[i].name != 'moon_1') {
+          if(Scene1Parallax[i].speed == 0 )
+            Scene1Parallax[i].Sprite.x = window.innerWidth/2 + (Scene1Parallax[i].startX * window.innerHeight/1440)
+          else Scene1Parallax[i].run(Scene1Parallax[i].speed)
+          Scene1Parallax[i].Sprite.y = (tracker*window.innerHeight/1440 ) / Scene1Parallax[i].slow + (Scene1Parallax[i].startY *window.innerHeight/1440) 
+        } else {
+          Scene1Parallax[i].parallaxMouse(2, 20, 10, 60, tracker, 300)
+        }
       }
-      Scene1Parallax[0].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene1Parallax[0].startY *window.innerHeight/1440)
-      Scene1Parallax[1].Sprite.y = (tracker*window.innerHeight/1440 ) / 1.5 + (Scene1Parallax[1].startY *window.innerHeight/1440)
-      Scene1Parallax[2].Sprite.y = (tracker*window.innerHeight/1440 ) / 2.5 + (Scene1Parallax[2].startY *window.innerHeight/1440)
-      Scene1Parallax[3].Sprite.y = (tracker*window.innerHeight/1440 ) / 2.5 + (Scene1Parallax[3].startY *window.innerHeight/1440)
-      Scene1Parallax[4].Sprite.y = (tracker*window.innerHeight/1440 ) / 10 + (Scene1Parallax[4].startY *window.innerHeight/1440)
-      Scene1Parallax[5].Sprite.y = (tracker*window.innerHeight/1440 ) /2 + (Scene1Parallax[5].startY *window.innerHeight/1440)
-      // scene1.y = (tracker*window.innerHeight/1440 )
+      // Scene1Parallax[5].parallaxMouse(2, 70, 0, 60, tracker, 400)
+      // Scene1Parallax[6].run(100)
+      // console.log(Scene1Parallax[6])
+      // Scene1Parallax[0].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene1Parallax[0].startY *window.innerHeight/1440)
+      // Scene1Parallax[2].Sprite.y = (tracker*window.innerHeight/1440 ) / 2.5 + (Scene1Parallax[2].startY *window.innerHeight/1440)
+      // Scene1Parallax[3].Sprite.y = (tracker*window.innerHeight/1440 ) / 2.5 + (Scene1Parallax[3].startY *window.innerHeight/1440)
+      // Scene1Parallax[4].Sprite.y = (tracker*window.innerHeight/1440 ) / 10 + (Scene1Parallax[4].startY *window.innerHeight/1440)
+      // Scene1Parallax[5].Sprite.y = (tracker*window.innerHeight/1440 ) /2 + (Scene1Parallax[5].startY *window.innerHeight/1440)
+      scene1.y = (tracker + 1000) *window.innerHeight/1440
 
 
        for( let i = 0; i < Scene2Parallax.length; i+= 1) {
         Scene2Parallax[i].Sprite.scale.set(Scene2Parallax[i].scale * window.innerHeight/1440, Scene2Parallax[i].scale * window.innerHeight/1440)
-        Scene2Parallax[i].Sprite.x = window.innerWidth/2 + (Scene2Parallax[i].startX * window.innerHeight/1440)
+        if(Scene2Parallax[i].name != 'flower-1_2' && Scene2Parallax[i].name != 'flower-2_2') {
+          if(Scene2Parallax[i].speed == 0 )
+            Scene2Parallax[i].Sprite.x = window.innerWidth/2 + (Scene2Parallax[i].startX * window.innerHeight/1440)
+          else Scene2Parallax[i].run(Scene2Parallax[i].speed)
+          Scene2Parallax[i].Sprite.y = (tracker*window.innerHeight/1440 ) / Scene2Parallax[i].slow + (Scene2Parallax[i].startY *window.innerHeight/1440) 
+        } 
       }
-      Scene2Parallax[0].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene2Parallax[0].startY *window.innerHeight/1440)
-      Scene2Parallax[1].Sprite.y = (tracker*window.innerHeight/1440 ) / 14 + (Scene2Parallax[1].startY *window.innerHeight/1440)
-      Scene2Parallax[2].Sprite.y = (tracker*window.innerHeight/1440 ) / 5 + (Scene2Parallax[2].startY *window.innerHeight/1440)
-      Scene2Parallax[3].Sprite.y = (tracker*window.innerHeight/1440 ) / 6 + (Scene2Parallax[3].startY *window.innerHeight/1440)
-      Scene2Parallax[4].Sprite.y = (tracker*window.innerHeight/1440 ) / 6 + (Scene2Parallax[4].startY *window.innerHeight/1440)
-      Scene2Parallax[5].Sprite.y = (tracker*window.innerHeight/1440 ) / 8 + (Scene2Parallax[5].startY *window.innerHeight/1440)
-      Scene2Parallax[6].Sprite.y = (tracker*window.innerHeight/1440 ) / 3 + (Scene2Parallax[6].startY *window.innerHeight/1440)
-      Scene2Parallax[7].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene2Parallax[7].startY *window.innerHeight/1440)
-      Scene2Parallax[8].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene2Parallax[8].startY *window.innerHeight/1440)
-      Scene2Parallax[9].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene2Parallax[9].startY *window.innerHeight/1440)
-      Scene2Parallax[10].Sprite.y = (tracker*window.innerHeight/1440 ) /7 + (Scene2Parallax[10].startY *window.innerHeight/1440)
-      Scene2Parallax[11].Sprite.y = (tracker*window.innerHeight/1440 ) /5 + (Scene2Parallax[11].startY *window.innerHeight/1440)
-      Scene2Parallax[12].Sprite.y = (tracker*window.innerHeight/1440 ) /5 + (Scene2Parallax[12].startY *window.innerHeight/1440)      
-      scene2.y = (tracker*window.innerHeight/1440 )
+
+      Scene2Parallax[1].parallaxMouse(2, 30, 10, 60, tracker, 500)
+      Scene2Parallax[2].parallaxMouse(2, 20, 10, 40, tracker, 300)
+      scene2.y = (tracker - 2*1440 ) *window.innerHeight/1440
+      // Scene2Parallax[0].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene2Parallax[0].startY *window.innerHeight/1440)
+      // Scene2Parallax[1].Sprite.y = (tracker*window.innerHeight/1440 ) / 14 + (Scene2Parallax[1].startY *window.innerHeight/1440)
+      // Scene2Parallax[2].Sprite.y = (tracker*window.innerHeight/1440 ) / 5 + (Scene2Parallax[2].startY *window.innerHeight/1440)
+      // Scene2Parallax[3].Sprite.y = (tracker*window.innerHeight/1440 ) / 6 + (Scene2Parallax[3].startY *window.innerHeight/1440)
+      // Scene2Parallax[4].Sprite.y = (tracker*window.innerHeight/1440 ) / 6 + (Scene2Parallax[4].startY *window.innerHeight/1440)
+      // Scene2Parallax[5].Sprite.y = (tracker*window.innerHeight/1440 ) / 8 + (Scene2Parallax[5].startY *window.innerHeight/1440)
+      // Scene2Parallax[6].Sprite.y = (tracker*window.innerHeight/1440 ) / 3 + (Scene2Parallax[6].startY *window.innerHeight/1440)
+      // Scene2Parallax[7].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene2Parallax[7].startY *window.innerHeight/1440)
+      // Scene2Parallax[8].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene2Parallax[8].startY *window.innerHeight/1440)
+      // Scene2Parallax[9].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene2Parallax[9].startY *window.innerHeight/1440)
+      // Scene2Parallax[10].Sprite.y = (tracker*window.innerHeight/1440 ) /7 + (Scene2Parallax[10].startY *window.innerHeight/1440)
+      // Scene2Parallax[11].Sprite.y = (tracker*window.innerHeight/1440 ) /5 + (Scene2Parallax[11].startY *window.innerHeight/1440)
+      // Scene2Parallax[12].Sprite.y = (tracker*window.innerHeight/1440 ) /5 + (Scene2Parallax[12].startY *window.innerHeight/1440)      
+    
 
 
       for( let i = 0; i < Scene3Parallax.length; i+= 1) {
@@ -341,7 +383,7 @@ function onAssetsLoaded(loader, resources)
       Scene3Parallax[6].Sprite.y = (tracker*window.innerHeight/1440 ) / 3.5 + (Scene3Parallax[6].startY *window.innerHeight/1440)
       Scene3Parallax[7].Sprite.y = (tracker*window.innerHeight/1440 ) / 2 + (Scene3Parallax[7].startY *window.innerHeight/1440)
       Scene3Parallax[8].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene3Parallax[8].startY *window.innerHeight/1440)
-      scene3.y = (tracker*window.innerHeight/1440 )
+      scene3.y = (tracker  + 1000 ) *window.innerHeight/1440
 
       for( let i = 0; i < Scene4Parallax.length; i+= 1) {
         Scene4Parallax[i].Sprite.scale.set(Scene4Parallax[i].scale * window.innerHeight/1440, Scene4Parallax[i].scale * window.innerHeight/1440)

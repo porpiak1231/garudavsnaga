@@ -1,7 +1,8 @@
 
 class Parallax extends Element {
-  constructor({ alpha = 1, startY = 0, factorFade = 1500, slide = 0, ...props}) {
+  constructor({ slow = 1, alpha = 1, startY = 0, factorFade = 1500, slide = 0, ...props}) {
     super(props)
+    this.slow = slow
     this.posY = props.posY
     this.Sprite.alpha = alpha
     this.stick = true
@@ -131,32 +132,37 @@ class Parallax extends Element {
 
   parallaxMouse(speedFactor, multiX, multiY, maxRange, tracker, slow) {
     this.Sprite.scale.set(this.scale * window.innerHeight/1440, this.scale * window.innerHeight/1440)
-    this.Sprite.x = window.innerWidth/2
-    this.Sprite.y = window.innerHeight/48 * 24 - (tracker*window.innerHeight/1440 )/7 + (this.startY *window.innerHeight/1440)
+    this.Sprite.x = window.innerWidth/2 + this.startX* window.innerHeight/1440
+    this.Sprite.y = (tracker*window.innerHeight/1440 )/this.slow + (this.startY * window.innerHeight/1440)
     // const window.innerWidth/2 + (this.startX * window.innerHeight/1440) = window.innerWidth/2 + (this.startX * window.innerHeight/1440)
     // const posY = (tracker*window.innerHeight/1440 ) + (IntroParallax[2].startY *window.innerHeight/1440)
     // const centerX =  window.innerWidth/2
     const {x, y} = app.renderer.plugins.interaction.mouse.global
     let factorX = 0, factorY = 0
-    if(x > window.innerWidth || x < 0) {
-      factorX = 0
-      factorY = 0
-    } else {
-      let dx = x - this.Sprite.x
-      let dy = y - this.Sprite.y 
-      const angleX = Math.atan2( slow, dx)
-      const angleY = Math.atan2( dy, slow)
-      factorX = Math.cos(angleX) * speedFactor * multiX
-      factorY = Math.sin(angleY) * speedFactor * multiY
-    }
+
+    let dx = x - this.Sprite.x
+    let dy = y - this.Sprite.y
+    // let dy = ((y -tracker)* window.innerHeight/1440) - this.Sprite.y 
+    const angleX = Math.atan2( slow, dx)
+    const angleY = Math.atan2( dy, slow)
+    factorX = Math.cos(angleX) * speedFactor * multiX
+    factorY = Math.sin(angleY) * speedFactor * multiY
     // if(this.Sprite.x + factorX <= window.innerWidth/2 + (this.startX * window.innerHeight/1440) + maxRange && this.Sprite.x + factorX >= window.innerWidth/2 + (this.startX * window.innerHeight/1440) - maxRange)
       
     this.Sprite.x += factorX * window.innerHeight/1440
     this.Sprite.y += factorY * window.innerHeight/1440
+    console.log(this.Sprite.x , dy)
     // this.Sprite.x = window.innerHeight/2 + this.Sprite.x 
     // else {
     //   window.innerWidth/2 + ((this.Sprite.x) * window.innerHeight/1440)
     // }// this.Sprite.x += factorX
     // // this.Sprite.y += factorY
+  }
+
+  run(speed) {
+    this.Sprite.x += speed * window.innerHeight/1440
+    if (this.Sprite.x >= (this.Sprite.width * this.acX) + window.innerWidth) {
+      this.Sprite.x =  - (this.Sprite.width * Math.abs(1 - this.acX) + window.innerWidth)
+    }
   }
 }
