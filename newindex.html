@@ -1,0 +1,399 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Hello World</title>
+</head>
+<style>
+  html, body {
+    overflow: hidden;
+    margin:0px;
+    height:100%;
+    width:100%;
+    background-color: black;
+  }
+  
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.1/pixi.min.js"></script>
+<body>
+ 
+
+<script src="js/classes/Element.js"></script>
+<script src="js/classes/Parallax.js"></script>
+<script src="js/classes/Title.js"></script>
+<script src="js/methods/initialElement.js"></script>
+<script src="js/methods/initialTitle.js"></script>
+<script src="js/methods/initialParallax.js"></script>
+<script type="text/javascript">
+  console.log(window.navigator.platform )
+
+  var app = new PIXI.Application(window.innerWidth, window.innerHeight);
+  PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+  app.renderer.view.style.position = "absolute";
+  app.renderer.view.style.display = "block";
+  app.renderer.autoResize = true;
+  app.renderer.backgroundColor = 0x000000 
+  app.renderer.resize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(app.renderer.view);
+  app.stop()
+  PIXI.loader
+    .add('garuda_1', 'images/assets/scene_1/garuda-s.png')
+    .add('naga_1', 'images/assets/scene_1/naga.png')
+    .add('square_1', 'images/assets/scene_1/square.png')
+    .add('text_1', 'images/assets/scene_1/text.png')
+    .add('monk', 'images/assets/scene_1/monk_min.png')
+    .add('bg_1', 'images/assets/sc01/bg.png')
+    .add('smog-1_1', 'images/assets/sc01/smog-1.png')
+    .add('smog-2_1', 'images/assets/sc01/smog-2.png')
+    .add('smog-3_1', 'images/assets/sc01/smog-3.png')
+    .add('moon_1', 'images/assets/sc01/moon.png')
+    .add('dust_1', 'images/assets/sc01/dust.png')
+
+    .add('bg_2', 'images/assets/sc02/whitebg.png')
+    .add('monk_2', 'images/assets/sc02/s01-monk-min.png')
+    .add('storytext-1_2', 'images/assets/sc02/s01-storytext-min.png')
+    .add('storytext-2_2', 'images/assets/sc02/s02-storytext-min.png')
+    .add('name_2', 'images/assets/sc02/s02-name-min.png')
+    .add('storytext-3_2', 'images/assets/sc02/s03-storytext-min.png')
+    .add('gatru_2', 'images/assets/sc02/s02-gatru-min.png')
+    .add('winta_2', 'images/assets/sc02/s02-winta-min.png')
+    .add('name-winta_2', 'images/assets/sc02/s03-name-winta-min.png')
+    .add('name-gatru_2', 'images/assets/sc02/s03-name-gatru-min.png')
+    .add('flower-1_2', 'images/assets/sc02/s02-flowerback-min.png')
+    .add('flower-2_2', 'images/assets/sc02/s02-flowermid-min.png')
+    .add('flower-3_2', 'images/assets/sc02/s02-flowerfront-min.png')
+
+    .add('bg_3', 'images/assets/sc03/s04-05bg-min.png')
+    .add('gatru_3', 'images/assets/sc03/s04-gatru-min.png')
+    .add('nak_3', 'images/assets/sc03/s04-nak-min.png')
+    .add('storytext-1_3', 'images/assets/sc03/s04-storytext-min.png')
+    .add('sonback_3', 'images/assets/sc03/s05-sonback-min.png')
+    .add('sonfront_3', 'images/assets/sc03/s05-sonfront-min.png')
+    .add('sonshadow_3', 'images/assets/sc03/s05-sonshadow-min.png')
+    .add('storytext-2_3', 'images/assets/sc03/s05-storytext-min.png')
+    .add('winta_3', 'images/assets/sc03/s05-winta-min.png')
+
+    .add('bg_4', 'images/assets/sc04/s06-bg-min.png')
+    .add('storytext-1_4', 'images/assets/sc04/s06-storytext-min.png')
+    .add('rain_4', 'images/assets/sc04/rains-s.png')
+
+    .add('bg_5', 'images/assets/sc05/s01-bg-min.png')
+    .add('active-egg_5', 'images/assets/sc05/s01-active-egg-min.png')
+    .add('button-egg_5', 'images/assets/sc05/s01-button-egg-min.png')
+    .add('button-text_5', 'images/assets/sc05/s01-button-text-min.png')
+    .add('crackegg1_5', 'images/assets/sc05/s01-crackegg2-min.png')
+    .add('crackegg2_5', 'images/assets/sc05/s01-crackegg3-min.png')
+    .add('crackegg3_5', 'images/assets/sc05/s01-crackegg4-min.png')
+    .add('hover-egg_5', 'images/assets/sc05/s01-hover-egg-min.png')
+    .add('mil-egg_5', 'images/assets/sc05/s01-megg-min.png')
+    .add('nakbg_5', 'images/assets/sc05/s01-nak-bg-min.png')
+    .add('nak_5', 'images/assets/sc05/s01-nak-min.png')
+    .add('storytext_5', 'images/assets/sc05/s01-storytext-min.png')
+  
+
+    .load(onAssetsLoaded);
+  let scrollingValue = 0;
+
+function onAssetsLoaded(loader, resources)
+{
+  const introScene = new PIXI.Container()
+  const text = new PIXI.Container()
+  const scene1 = new PIXI.Container()
+  const scene2 = new PIXI.Container()
+  const scene3 = new PIXI.Container()
+  const scene4 = new PIXI.Container()
+  const scene5 = new PIXI.Container()
+  const background = new PIXI.Container()
+  app.stage.addChild(background)
+  app.stage.addChild(scene2)
+  app.stage.addChild(scene3)
+  app.stage.addChild(scene4)
+  app.stage.addChild(scene5)
+  app.stage.addChild(scene1)
+  app.stage.addChild(introScene)
+  app.stage.addChild(text)
+
+  const IntroParallax = initialParallax.intro()
+  const Scene1Parallax = initialParallax.sceneOne()
+  const Scene2Parallax = initialParallax.sceneTwo()
+  const Scene3Parallax = initialParallax.sceneThree()
+  const Scene4Parallax = initialParallax.sceneFour()
+  const Scene5Parallax = initialParallax.sceneFive()
+  const BackgroundParallax = initialParallax.background()
+  const TextParallax = initialParallax.text()
+  // console.log(Scene1Parallax[0])
+  // for( let i = 0; i < IntroParallax.length; i+= 1) {
+  //   introScene.addChild(IntroParallax[i].Sprite)
+  // }
+
+  introScene.addChild(IntroParallax[2].Sprite)
+  introScene.addChild(IntroParallax[0].Sprite)
+  introScene.addChild(IntroParallax[1].Sprite)
+  introScene.addChild(IntroParallax[3].Sprite)
+
+  const getMousePosition = () => app.renderer.plugins.interaction.mouse.global
+
+  let wheelValue = 0
+  let tracker = 0
+  
+  document.getElementsByTagName("BODY")[0].addEventListener("wheel", (e) => {
+    // console.log(e)
+    if(window.navigator.platform == 'MacIntel') e.deltaY *= -1
+    if(wheelValue < 0 && e.deltaY > 0) wheelValue = 0
+    else if (wheelValue > 0 && e.deltaY < 0) wheelValue = 0
+    wheelValue += e.deltaY * window.innerHeight/1440
+
+  });
+  let intro = 1, intro2 = 0, interact_1 = 0
+  // const window.innerWidth/2 =  window.innerWidth/2
+  // const window.innerHeight/1440 = window.innerHeight/1440
+  
+  background.alpha = 0
+  let r = 0
+  let g = 0
+  let b = 0
+  function changeBg(lastR, lastG, lastB, speedColor) {
+    if(r > lastR) {
+      r -= speedColor
+      if(r <= lastR) r = lastR
+    } else if (r < lastR){
+      r += speedColor
+      if(r >= lastR) r = lastR
+    }
+
+    if(g > lastG) {
+      g -= speedColor
+      if(g <= lastG) g = lastG
+    } else if (g < lastG){
+      g += speedColor
+      if(g >= lastG) g = lastG
+    }
+
+    if(b > lastB) {
+      b -= speedColor
+      if(b <= lastB) b = lastB
+    } else if (b < lastB){
+      b += speedColor
+      if(b >= lastB) b = lastB
+    }
+      // if ((r << 16) + (g << 8) + (b) > 0xFFFFFF) app.renderer.backgroundColor = 0xFFFFFF
+      // else app.renderer.backgroundColor = (r << 16) + (g << 8) + (b)
+    app.renderer.backgroundColor = (r << 16) + (g << 8) + (b)
+    // app.renderer.backgroundColor = (r << 16) + (g << 8) + (b)
+    console.log(app.renderer.backgroundColor)
+    
+  }
+  app.ticker.add(function(delta) {
+    app.renderer.resize(window.innerWidth, window.innerHeight);
+    if(intro || intro2 || interact_1) {
+      if(intro) {
+        let checkIntro2 = true
+        for( let i = 0; i < 2; i += 1) {
+          IntroParallax[i].Sprite.scale.set(IntroParallax[i].scale * window.innerHeight/1440, IntroParallax[i].scale * window.innerHeight/1440)
+          // IntroParallax[i].Sprite.x = window.innerWidth/2 + (IntroParallax[i].startX * window.innerHeight/1440)
+          IntroParallax[i].Sprite.y = window.innerHeight/48 * 24 + (tracker*window.innerHeight/1440 ) + (IntroParallax[i].startY * window.innerHeight/1440)
+          IntroParallax[i].Sprite.alpha += 0.02
+          if(IntroParallax[i].Sprite.alpha > 1) {
+            checkIntro2 = false
+            IntroParallax[i].Sprite.alpha = 1
+          }
+        }
+        IntroParallax[0].moveToX({ endPos : { x: window.innerWidth/2 + IntroParallax[0].startX * window.innerHeight/1440, y: 0}, speed : 90 })
+        const checkIntro = IntroParallax[1].moveToX({ endPos : { x: window.innerWidth/2 + IntroParallax[1].startX * window.innerHeight/1440, y: 0 }, speed : 90 })
+        if(!checkIntro && !checkIntro2) {
+          intro -= 0.5
+          intro2 = 1
+          // for( let i = 2; i < Scene1Parallax.length; i+= 1) {
+          //   main.addChild(Scene1Parallax[i].Sprite)
+          // }
+          // for( let i = 1; i < BackgroundParallax.length; i+= 1) {
+          //   background.addChild(BackgroundParallax[i].Sprite)
+          // }
+          // for( let i = 1; i < TextParallax.length; i+= 1) {
+          //   text.addChild(TextParallax[i].Sprite)
+          // }
+        }
+      } else if ( intro2 ) {
+        for( let i = 0; i < 4; i += 1) {
+          IntroParallax[i].Sprite.scale.set(IntroParallax[i].scale * window.innerHeight/1440, IntroParallax[i].scale * window.innerHeight/1440)
+          IntroParallax[i].Sprite.x = window.innerWidth/2 + (IntroParallax[i].startX * window.innerHeight/1440)
+          IntroParallax[i].Sprite.y = window.innerHeight/48 * 24 + (tracker*window.innerHeight/1440 ) + (IntroParallax[i].startY * window.innerHeight/1440)
+        }
+        IntroParallax[2].Sprite.alpha += 0.09
+        if(IntroParallax[2].Sprite.alpha > 1) {
+          IntroParallax[2].Sprite.alpha = 1
+          if(!IntroParallax[3].pulse1({
+            pulse: 1
+          })) {
+            intro2 = 0
+            //////
+            for( let i = 0; i < Scene1Parallax.length; i+= 1) {
+              scene1.addChild(Scene1Parallax[i].Sprite)
+            }
+            for( let i = 0; i < Scene2Parallax.length; i+= 1) {
+              scene2.addChild(Scene2Parallax[i].Sprite)
+            }
+            for( let i = 0; i < Scene3Parallax.length; i+= 1) {
+              scene3.addChild(Scene3Parallax[i].Sprite)
+            }
+            for( let i = 0; i < Scene4Parallax.length; i+= 1) {
+              scene4.addChild(Scene4Parallax[i].Sprite)
+            }
+            for( let i = 0; i < Scene5Parallax.length; i+= 1) {
+              scene5.addChild(Scene5Parallax[i].Sprite)
+            }
+            for( let i = 0; i < BackgroundParallax.length; i+= 1) {
+              background.addChild(BackgroundParallax[i].Sprite)
+            }
+            for( let i = 0; i < TextParallax.length; i+= 1) {
+              text.addChild(TextParallax[i].Sprite)
+            }
+          }
+        }
+      }
+    } else {
+      if(tracker > 0) {
+        tracker = 0
+        const angle = Math.atan2(wheelValue, 240)
+        const yVelo = Math.sin(angle) * 50
+        wheelValue -= yVelo
+      }
+      const angle = Math.atan2(wheelValue, 240)
+      const yVelo = Math.sin(angle) * 50
+      if(wheelValue > 0) {
+        wheelValue -= 15 * window.innerHeight/1440
+        if(wheelValue < 0) wheelValue = 0
+        tracker += yVelo
+      } else if(wheelValue < 0) {
+        wheelValue += 15 * window.innerHeight/1440
+        if(wheelValue > 0) wheelValue = 0
+        tracker += yVelo
+      } else {
+        wheelValue = 0
+      }
+      /////// TRACKER ///////
+      if ( (tracker*window.innerHeight/1440 ) <= (-2000*window.innerHeight/1440 )){
+        changeBg(255,255,255,10)
+      } else {
+        changeBg(0,0,0,10)
+      }
+      // console.log((tracker*window.innerHeight/1440 ) , (2000*window.innerHeight/1440 ))
+      // console.log(wheelValue)
+
+
+      for( let i = 0; i < 2; i+= 1) {
+        IntroParallax[i].Sprite.scale.set(IntroParallax[i].scale * window.innerHeight/1440, IntroParallax[i].scale * window.innerHeight/1440)
+        IntroParallax[i].Sprite.x = window.innerWidth/2 + (IntroParallax[i].startX * window.innerHeight/1440)
+      }
+      IntroParallax[0].Sprite.y = window.innerHeight/48 * 24 - (tracker*window.innerHeight/1440 )/5 + (IntroParallax[0].startY *window.innerHeight/1440)      
+      IntroParallax[1].Sprite.y = window.innerHeight/48 * 24 + (tracker*window.innerHeight/1440 )/10 + (IntroParallax[1].startY *window.innerHeight/1440)
+      introScene.y = (tracker*window.innerHeight/1440 )
+      // let nowX = window.innerWidth/2 + (IntroParallax[2].startX * window.innerHeight/1440)
+      // let nowY = window.innerHeight/48 * 24 + (tracker*window.innerHeight/1440 ) + (IntroParallax[2].startY *window.innerHeight/1440)
+      IntroParallax[2].parallaxMouse(2, 20, 10, 60, tracker, 300)
+      IntroParallax[3].parallaxMouse(1, 10, 20, 30, tracker, 300)
+
+      ////// herer ///////////////////////
+      for( let i = 0; i < Scene1Parallax.length; i+= 1) {
+        Scene1Parallax[i].Sprite.scale.set(Scene1Parallax[i].scale * window.innerHeight/1440, Scene1Parallax[i].scale * window.innerHeight/1440)
+        Scene1Parallax[i].Sprite.x = window.innerWidth/2 + (Scene1Parallax[i].startX * window.innerHeight/1440)
+      }
+      Scene1Parallax[0].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene1Parallax[0].startY *window.innerHeight/1440)
+      Scene1Parallax[1].Sprite.y = (tracker*window.innerHeight/1440 ) / 1.5 + (Scene1Parallax[1].startY *window.innerHeight/1440)
+      Scene1Parallax[2].Sprite.y = (tracker*window.innerHeight/1440 ) / 2.5 + (Scene1Parallax[2].startY *window.innerHeight/1440)
+      Scene1Parallax[3].Sprite.y = (tracker*window.innerHeight/1440 ) / 2.5 + (Scene1Parallax[3].startY *window.innerHeight/1440)
+      Scene1Parallax[4].Sprite.y = (tracker*window.innerHeight/1440 ) / 10 + (Scene1Parallax[4].startY *window.innerHeight/1440)
+      Scene1Parallax[5].Sprite.y = (tracker*window.innerHeight/1440 ) /2 + (Scene1Parallax[5].startY *window.innerHeight/1440)
+      // scene1.y = (tracker*window.innerHeight/1440 )
+
+
+       for( let i = 0; i < Scene2Parallax.length; i+= 1) {
+        Scene2Parallax[i].Sprite.scale.set(Scene2Parallax[i].scale * window.innerHeight/1440, Scene2Parallax[i].scale * window.innerHeight/1440)
+        Scene2Parallax[i].Sprite.x = window.innerWidth/2 + (Scene2Parallax[i].startX * window.innerHeight/1440)
+      }
+      Scene2Parallax[0].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene2Parallax[0].startY *window.innerHeight/1440)
+      Scene2Parallax[1].Sprite.y = (tracker*window.innerHeight/1440 ) / 14 + (Scene2Parallax[1].startY *window.innerHeight/1440)
+      Scene2Parallax[2].Sprite.y = (tracker*window.innerHeight/1440 ) / 5 + (Scene2Parallax[2].startY *window.innerHeight/1440)
+      Scene2Parallax[3].Sprite.y = (tracker*window.innerHeight/1440 ) / 6 + (Scene2Parallax[3].startY *window.innerHeight/1440)
+      Scene2Parallax[4].Sprite.y = (tracker*window.innerHeight/1440 ) / 6 + (Scene2Parallax[4].startY *window.innerHeight/1440)
+      Scene2Parallax[5].Sprite.y = (tracker*window.innerHeight/1440 ) / 8 + (Scene2Parallax[5].startY *window.innerHeight/1440)
+      Scene2Parallax[6].Sprite.y = (tracker*window.innerHeight/1440 ) / 3 + (Scene2Parallax[6].startY *window.innerHeight/1440)
+      Scene2Parallax[7].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene2Parallax[7].startY *window.innerHeight/1440)
+      Scene2Parallax[8].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene2Parallax[8].startY *window.innerHeight/1440)
+      Scene2Parallax[9].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene2Parallax[9].startY *window.innerHeight/1440)
+      Scene2Parallax[10].Sprite.y = (tracker*window.innerHeight/1440 ) /7 + (Scene2Parallax[10].startY *window.innerHeight/1440)
+      Scene2Parallax[11].Sprite.y = (tracker*window.innerHeight/1440 ) /5 + (Scene2Parallax[11].startY *window.innerHeight/1440)
+      Scene2Parallax[12].Sprite.y = (tracker*window.innerHeight/1440 ) /5 + (Scene2Parallax[12].startY *window.innerHeight/1440)      
+      scene2.y = (tracker*window.innerHeight/1440 )
+
+
+      for( let i = 0; i < Scene3Parallax.length; i+= 1) {
+        Scene3Parallax[i].Sprite.scale.set(Scene3Parallax[i].scale * window.innerHeight/1440, Scene3Parallax[i].scale * window.innerHeight/1440)
+        Scene3Parallax[i].Sprite.x = window.innerWidth/2 + (Scene3Parallax[i].startX * window.innerHeight/1440)
+      }
+      Scene3Parallax[0].Sprite.y = (tracker*window.innerHeight/1440 ) / 10 + (Scene3Parallax[0].startY *window.innerHeight/1440)
+      Scene3Parallax[1].Sprite.y = (tracker*window.innerHeight/1440 ) / 3.5 + (Scene3Parallax[1].startY *window.innerHeight/1440)
+      Scene3Parallax[2].Sprite.y = (tracker*window.innerHeight/1440 ) / 2 + (Scene3Parallax[2].startY *window.innerHeight/1440)
+      Scene3Parallax[3].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene3Parallax[3].startY *window.innerHeight/1440)
+      Scene3Parallax[4].Sprite.y = (tracker*window.innerHeight/1440 ) / 3 + (Scene3Parallax[4].startY *window.innerHeight/1440)
+      Scene3Parallax[5].Sprite.y = (tracker*window.innerHeight/1440 ) / 2.5 + (Scene3Parallax[5].startY *window.innerHeight/1440)
+      Scene3Parallax[6].Sprite.y = (tracker*window.innerHeight/1440 ) / 3.5 + (Scene3Parallax[6].startY *window.innerHeight/1440)
+      Scene3Parallax[7].Sprite.y = (tracker*window.innerHeight/1440 ) / 2 + (Scene3Parallax[7].startY *window.innerHeight/1440)
+      Scene3Parallax[8].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene3Parallax[8].startY *window.innerHeight/1440)
+      scene3.y = (tracker*window.innerHeight/1440 )
+
+      for( let i = 0; i < Scene4Parallax.length; i+= 1) {
+        Scene4Parallax[i].Sprite.scale.set(Scene4Parallax[i].scale * window.innerHeight/1440, Scene4Parallax[i].scale * window.innerHeight/1440)
+        Scene4Parallax[i].Sprite.x = window.innerWidth/2 + (Scene4Parallax[i].startX * window.innerHeight/1440)
+      }
+      Scene4Parallax[0].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene4Parallax[0].startY *window.innerHeight/1440)
+      Scene4Parallax[1].Sprite.y = (tracker*window.innerHeight/1440 ) / 6 + (Scene4Parallax[1].startY *window.innerHeight/1440)
+      Scene4Parallax[2].Sprite.y = (tracker*window.innerHeight/1440 ) / 2.5 + (Scene4Parallax[2].startY *window.innerHeight/1440)
+      Scene4Parallax[3].Sprite.y = (tracker*window.innerHeight/1440 ) /2 + (Scene4Parallax[3].startY *window.innerHeight/1440)
+      Scene4Parallax[4].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene4Parallax[4].startY *window.innerHeight/1440)
+      Scene4Parallax[5].Sprite.y = (tracker*window.innerHeight/1440 ) / 3 + (Scene4Parallax[5].startY *window.innerHeight/1440)
+      Scene4Parallax[6].Sprite.y = (tracker*window.innerHeight/1440 ) / 1.5 + (Scene4Parallax[6].startY *window.innerHeight/1440)
+      scene4.y = (tracker*window.innerHeight/1440 )
+
+
+      for( let i = 0; i < Scene5Parallax.length; i+= 1) {
+        Scene5Parallax[i].Sprite.scale.set(Scene5Parallax[i].scale * window.innerHeight/1440, Scene5Parallax[i].scale * window.innerHeight/1440)
+        Scene5Parallax[i].Sprite.x = window.innerWidth/2 + (Scene5Parallax[i].startX * window.innerHeight/1440)
+      }
+      Scene5Parallax[0].Sprite.y = (tracker*window.innerHeight/1440 ) / 4 + (Scene5Parallax[0].startY *window.innerHeight/1440)
+      // Scene5Parallax[1].Sprite.y = (tracker*window.innerHeight/1440 ) / 1.5 + (Scene5Parallax[1].startY *window.innerHeight/1440)
+      // Scene5Parallax[2].Sprite.y = (tracker*window.innerHeight/1440 ) / 2.5 + (Scene5Parallax[2].startY *window.innerHeight/1440)
+      // Scene5Parallax[3].Sprite.y = (tracker*window.innerHeight/1440 ) / 2.5 + (Scene5Parallax[3].startY *window.innerHeight/1440)
+      // Scene5Parallax[4].Sprite.y = (tracker*window.innerHeight/1440 ) / 10 + (Scene5Parallax[4].startY *window.innerHeight/1440)
+      // Scene5Parallax[5].Sprite.y = (tracker*window.innerHeight/1440 ) /2 + (Scene5Parallax[5].startY *window.innerHeight/1440)
+      scene5.y = (tracker*window.innerHeight/1440 )
+
+
+
+
+      // for( let i = 0; i < BackgroundParallax.length; i+= 1) {
+      //   BackgroundParallax[i].Sprite.scale.set(BackgroundParallax[i].scale * window.innerHeight/1440, BackgroundParallax[i].scale * window.innerHeight/1440)
+      //   BackgroundParallax[i].Sprite.x = window.innerWidth/2 + (BackgroundParallax[i].startX * window.innerHeight/1440)
+      //   BackgroundParallax[i].Sprite.y = window.innerHeight/48 * 24 + (tracker*window.innerHeight/1440 ) + (BackgroundParallax[i].startY *window.innerHeight/1440)
+      // }
+
+      // for( let i = 0; i < TextParallax.length; i+= 1) {
+      //   TextParallax[i].Sprite.scale.set(TextParallax[i].scale * window.innerHeight/1440, TextParallax[i].scale * window.innerHeight/1440)
+      //   TextParallax[i].Sprite.x = window.innerWidth/2 + (TextParallax[i].startX * window.innerHeight/1440)
+      //   TextParallax[i].Sprite.y = window.innerHeight/48 * 24 + (tracker*window.innerHeight/1440 ) + (TextParallax[i].startY *window.innerHeight/1440)
+      // }
+    }
+    // Scene1Parallax[1].x = window.innerWidth/2 + (500 * window.innerHeight/1440)
+    // Scene1Parallax[1].y = window.innerHeight/48 * 24 + (tracker*window.innerHeight/1440 + 2000)
+    // Scene1Parallax[1].Sprite.scale.set(window.innerHeight/1440, window.innerHeight/1440)
+    // Scene1Parallax[1].Sprite.x = Scene1Parallax[1].x
+    // Scene1Parallax[1].Sprite.y = Scene1Parallax[1].y
+  });
+  app.start()
+}
+
+</script>
+</body>
+
+</html>

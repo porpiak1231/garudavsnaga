@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Hello World</title>
+</head>
+<style>
+  html, body {
+    overflow: hidden;
+    margin:0px;
+    height:100%;
+    width:100%;
+    background-color: black;
+  }
+  
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.1/pixi.min.js"></script>
+<body>
+ 
+
+<script src="js/classes/Element.js"></script>
+<script src="js/classes/Parallax.js"></script>
+<script src="js/classes/Title.js"></script>
+<script src="js/methods/initialElement.js"></script>
+<script src="js/methods/initialTitle.js"></script>
+<script src="js/methods/initialParallax.js"></script>
+<script type="text/javascript">
+  
+
+  var app = new PIXI.Application(window.innerWidth, window.innerHeight);
+  app.renderer.view.style.position = "absolute";
+  app.renderer.view.style.display = "block";
+  app.renderer.autoResize = true;
+  app.renderer.backgroundColor = 0xffffff
+  app.renderer.resize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(app.renderer.view);
+  app.stop()
+  PIXI.loader
+    .add('bg', 'images/assets/bg.png')
+    .add('bg1', 'images/assets/01-1.png')
+    .add('bg2', 'images/assets/01-2.png')
+    .add('bg3', 'images/assets/01-3.png')
+    .add('dust', 'images/assets/dust.png')
+    .add('moon', 'images/assets/moon.png')
+    .add('text-garuda', 'images/assets/garuda.png')
+    .add('text-vs', 'images/assets/vs.png')
+    .add('text-naga', 'images/assets/naga.png')
+    .add('sc1-monk', 'images/assets/monk.png')
+    .add('sc1-chantra', 'images/assets/chantra.png')
+    .add('sc1-gatru', 'images/assets/gatru.png')
+    .add('sc1-flower', 'images/assets/flower.png')
+    .add('final.mp4')
+    .load(onAssetsLoaded);
+  let scrollingValue = 0;
+
+function onAssetsLoaded(loader, resources)
+{
+  let tracker = 0
+  const getMousePosition = () => app.renderer.plugins.interaction.mouse.global
+  console.log(resources)
+  const AllElement = initialElement()
+  const AllTitle = initialTitle()
+  const AllParallax = initialParallax()
+  console.log(AllParallax)
+  for(let i = 0; i < AllElement.length; i += 1) {
+    app.stage.addChild(AllElement[i].Sprite);
+  }
+  for(let i = 0; i < AllTitle.length; i += 1) {
+    app.stage.addChild(AllTitle[i].Sprite);
+  }
+  for(let i = 0; i < AllParallax.length; i += 1) {
+    app.stage.addChild(AllParallax[i].Sprite);
+  }
+  let button = null
+  document.getElementsByTagName("BODY")[0].addEventListener("wheel", (e) => {
+    let wheelValue = e.deltaY
+    if(wheelValue > 100) wheelValue = 100
+    else if (wheelValue < -100) wheelValue = -100
+    // console.log(wheelValue)
+    if(wheelValue > 0 && tracker > 100) {
+      for(let i = 0; i < AllTitle.length; i += 1) {
+          AllTitle[i].Sprite.y += wheelValue
+      }
+      for(let i = 0; i < AllElement.length; i += 1) {
+        AllElement[i].Sprite.y += wheelValue
+      }
+      for(let i = 0; i < AllParallax.length; i += 1) {
+        if(!AllParallax[i].stick) {
+          AllParallax[i].Sprite.y += wheelValue
+        }
+        AllParallax[0].fadeIn(tracker-1000)
+        AllParallax[1].slideFromRight(tracker-1000)
+        AllParallax[2].slideFromLeft(tracker-1000)
+        AllParallax[3].fadeIn(tracker-1000)
+      }
+      tracker -= wheelValue
+    } else if (wheelValue < 0 && tracker < 7000) {
+      const {x, y} = getMousePosition()
+      for(let i = 0; i < AllTitle.length; i += 1) {
+          AllTitle[i].Sprite.y += wheelValue
+      }
+      for(let i = 0; i < AllElement.length; i += 1) {
+        AllElement[i].Sprite.y += wheelValue
+      }
+      for(let i = 0; i < AllParallax.length; i += 1) {
+        if(!AllParallax[i].stick) {
+          AllParallax[i].Sprite.y += wheelValue
+        }
+      }
+      AllParallax[0].fadeIn(tracker-1000)
+      AllParallax[1].slideFromRight(tracker-1000)
+      AllParallax[2].slideFromLeft(tracker-1000)
+      AllParallax[3].fadeIn(tracker-1000)
+      tracker -= wheelValue
+    }
+
+    if(tracker >= 6000 && !button) {
+      button = new PIXI.Graphics()
+      .beginFill(0x0, 0.5)
+      .drawRoundedRect(0, 0, 100, 100, 10)
+      .endFill()
+      .beginFill(0xffffff)
+      .moveTo(36, 30)
+      .lineTo(36, 70)
+      .lineTo(70, 50);
+
+      // Position the button
+      button.x = (app.renderer.width - button.width) / 2;
+      button.y = (app.renderer.height - button.height) / 2 + 300;
+
+      // Enable interactivity on the button
+      button.interactive = true;
+      button.buttonMode = true;
+
+      // Add to the stage
+      app.stage.addChild(button);
+      button.on('pointertap', onPlayVideo);
+    } else if (tracker < 6000 && button) {
+      button.destroy()
+      button = null
+    } 
+  });
+  
+  const onPlayVideo = () => {
+
+    button.alpha = 0;
+
+    const texture = PIXI.Texture.fromVideo('final.mp4');
+    const videoSprite = new PIXI.Sprite(texture);
+
+    videoSprite.width = app.renderer.width;
+    videoSprite.height = app.renderer.height;
+
+    app.stage.addChild(videoSprite); 
+    stopButton = new PIXI.Graphics()
+      .beginFill(0x0, 0.5)
+      .drawRoundedRect(0, 0, 100, 100, 10)
+      .endFill()
+      .beginFill(0xffffff)
+      .moveTo(36, 30)
+      .lineTo(36, 70)
+      .lineTo(70, 50);
+
+    // Position the button
+    stopButton.x = (app.renderer.width - stopButton.width) / 2;
+    stopButton.y = (app.renderer.height - stopButton.height) / 2 + 300;
+
+    // Enable interactivity on the stopButton
+    stopButton.interactive = true;
+    stopButton.buttonMode = true;
+
+    // Add to the stage
+    app.stage.addChild(stopButton);
+    stopButton.on('pointertap', () => {
+      onStopVideo(videoSprite, stopButton)
+    });
+  }
+
+  const onStopVideo = (videoSprite, stopButton) => {
+    stopButton.alpha = 0
+    videoSprite.destroy()
+    button.alpha = 1
+    
+  }
+
+  app.ticker.add(function(delta) {
+    const {x, y} = getMousePosition()
+    for(let i = 0; i < AllElement.length; i += 1) {
+      AllElement[i].run()
+    }
+    for(let i = 0; i < AllTitle.length; i += 1) {
+      AllTitle[i].rotate({x, y})
+    }
+    // for(let i = 0; i < AllParallax.length; i += 1) {
+      AllParallax[0].parallaxMouse({x, y})
+    // }
+    app.renderer.resize(window.innerWidth, window.innerHeight);
+  });
+  app.start()
+  
+  
+}
+
+</script>
+<!-- <video width="100%"  controls>
+  <source src="final.mp4" type="video/mp4">
+</video> -->
+</body>
+
+</html>
